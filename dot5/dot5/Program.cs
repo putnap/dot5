@@ -23,7 +23,7 @@ namespace dot5
 
                     foreach (IPAddress address in addresses)
                     {
-                        var a = string.Format("tcp://{0}:{1}", address, 5556);
+                        string a = string.Format("tcp://{0}:{1}", address, 5556);
                         client.Connect(a);
                     }
 

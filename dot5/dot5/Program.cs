@@ -13,17 +13,13 @@ namespace dot5
         {
             using (NetMQContext ctx = NetMQContext.Create())
             {
-                using (var server = ctx.CreateResponseSocket())
+                using (var client = ctx.CreateRequestSocket())
                 {
-                    server.Bind("tcp://127.0.0.1:5556");
-                    using (var client = ctx.CreateRequestSocket())
-                    {
-                        client.Connect("tcp://127.0.0.1:5556");
-                        client.Send("Hello");
+                    client.Connect("tcp://127.0.0.1:5556");
 
-                        string m1 = server.ReceiveString();
-                        Console.WriteLine("From Client: {0}", m1);
-                        server.Send("Hello,");
+                    while (true)
+                    {
+                        client.Send("Hello");
 
                         string m2 = client.ReceiveString();
                         Console.WriteLine("From Server: {0}", m2);

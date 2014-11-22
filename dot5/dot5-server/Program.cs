@@ -10,18 +10,28 @@ namespace dot5_server
         {
             using (var ctx = NetMQContext.Create())
             {
-                using (var server = ctx.CreateDealerSocket())
+                using (var server = ctx.CreateResponseSocket())
                 {
-                    server.Bind("tcp://127.0.0.1:5556");
-                    server.Send("Hello,");
-                    //var message = server.ReceiveString();
+                    server.Bind("tcp://192.168.1.10:5556");
 
-                    //if (count%1000 == 0)
-                    //{
-                    //    //Console.WriteLine("From Client ({0}): {1}", count, message);
-                    //    Console.WriteLine("Msgs/s: {0}", count / sw.Elapsed.TotalSeconds);
-                    //}
+                    int count = 0;
 
+                    var sw = Stopwatch.StartNew();
+                    
+                    while (true)
+                    {
+                        var message = server.ReceiveString();
+
+                        if (count%1000 == 0)
+                        {
+                            //Console.WriteLine("From Client ({0}): {1}", count, message);
+                            Console.WriteLine("Msgs/s: {0}", count / sw.Elapsed.TotalSeconds);
+                        }
+
+                        server.Send("Hello,");
+
+                        count++;
+                    }
                 }
             }
         }

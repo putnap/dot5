@@ -10,8 +10,8 @@ namespace dot5_server
 
         static void Main(string[] args)
         {
-            string newIP;
-            string serverName = "myName";
+            string newIP = string.Empty;
+            string serverName = string.Empty;
             if (args.Length > 0)
             {
                 newIP = args[0];
@@ -29,8 +29,16 @@ namespace dot5_server
                     newIP = defaultIp;
             }
 
-            Console.Write("Please enter a server name: ");
-            serverName = Console.ReadLine();
+            if (args.Length > 1)
+            {
+                serverName = args[1];
+            }
+            else
+                while (string.IsNullOrEmpty(serverName))
+                {
+                    Console.Write("Please enter a server name: ");
+                    serverName = Console.ReadLine();
+                }
 
             if (string.IsNullOrEmpty(serverName))
                 serverName = defaultServerName;

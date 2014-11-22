@@ -11,7 +11,7 @@ namespace dot5
     {
         static void Main(string[] args)
         {
-            var ipAddressAndPort = "127.0.0.1:5556";
+            var ipAddressAndPort = "127.0.0.1:5557";
             if (args.Any())
             {
                 ipAddressAndPort = args[0];
@@ -19,19 +19,14 @@ namespace dot5
 
             using (NetMQContext ctx = NetMQContext.Create())
             {
-                using (var client = ctx.CreateRequestSocket())
+                using (var client = ctx.CreateRouterSocket())
                 {
+                    client.Options.SendTimeout = TimeSpan.FromSeconds(10);
                     Console.WriteLine("Connecting to " + ipAddressAndPort);
                     client.Connect("tcp://" + ipAddressAndPort);
-
-                    while (true)
-                    {
-                        client.Send("Hello");
-
-                        string m2 = client.ReceiveString();
-                        Console.WriteLine("From Server: {0}", m2);
-                        Console.ReadLine();
-                    }
+                    string m2 = client.ReceiveString();
+                    Console.WriteLine("From Server: {0}", m2);
+                    Console.ReadLine();
                 }
             }
 

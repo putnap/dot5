@@ -13,7 +13,7 @@ namespace dot5
     {
         static void Main(string[] args)
         {
-            var baseAddress = args.Length >=1 
+            var baseAddress = args.Length >= 1
                 ? args[0]
                 : "127.0.0";
             var port = args.Length == 2
@@ -26,7 +26,7 @@ namespace dot5
                 {
                     var addresses = CreateAddresses(baseAddress);
 
-                    
+
                     //var m = client.ReceiveMessage();
 
                     foreach (var address in addresses)
@@ -45,7 +45,7 @@ namespace dot5
 
                     }
 
-                    
+
                     Console.ReadLine();
                 }
             }
@@ -54,7 +54,8 @@ namespace dot5
 
         private static void ConnectToIp(DealerSocket socket, IPAddress address)
         {
-            var addresses = Enumerable.Range(3000, 4000)
+            var addresses = new[] { 5556 }.Concat(Enumerable.Range(3000, 4001))
+                .Distinct()
                 .Select(port => string.Format("tcp://{0}:{1}", address.ToString(), port))
                 .ToList();
 
@@ -64,8 +65,8 @@ namespace dot5
         private static IEnumerable<IPAddress> CreateAddresses(string baseAddress)
         {
             return Enumerable.Range(0, 256)
-                .Select(ip=>  IPAddress.Parse(baseAddress+"."+ip))
-                .ToList();                      
+                .Select(ip => IPAddress.Parse(baseAddress + "." + ip))
+                .ToList();
         }
 
     }

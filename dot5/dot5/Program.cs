@@ -45,9 +45,9 @@ namespace dot5
 
                     }
 
-
                     Console.ReadLine();
                 }
+
             }
 
         }

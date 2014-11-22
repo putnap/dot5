@@ -11,30 +11,51 @@ namespace dot5
     {
         static void Main(string[] args)
         {
-            var ipAddressAndPort = "127.0.0.1:5556";
-            if (args.Any())
-            {
-                ipAddressAndPort = args[0];
-            }
+            var baseAddress = args.Length >=1 
+                ? args[0]
+                : "127.0.0";
+            var port = args.Length == 2
+                ? args[1]
+                : "5556";
 
             using (NetMQContext ctx = NetMQContext.Create())
             {
-                using (var client = ctx.CreateRequestSocket())
+                using (var client = ctx.CreateDealerSocket())
                 {
-                    Console.WriteLine("Connecting to " + ipAddressAndPort);
-                    client.Connect("tcp://" + ipAddressAndPort);
+                   
 
+                    var addresses = CreateAddresses(baseAddress, port);
+
+
+                    foreach (var address in addresses)
+                    {
+                        //Console.WriteLine("Connecting to " + address);
+                        client.Connect(address);
+                    }
                     while (true)
                     {
-                        client.Send("Hello");
+                        //client.Poll();
+                        //var messages = client.ReceiveStringMessages();
+                        var secret = client.ReceiveString();
+                        Console.WriteLine("Secret " + secret);
+                        //client.SendMore("");
+                        //client.SendMore("Hello");
 
-                        string m2 = client.ReceiveString();
-                        Console.WriteLine("From Server: {0}", m2);
-                        Console.ReadLine();
                     }
+
+                    
+                    Console.ReadLine();
                 }
             }
 
         }
+
+        private static IEnumerable<string> CreateAddresses(string baseAddress, string port)
+        {
+            return Enumerable.Range(0, 256)
+                      .Select(ip => string.Format("tcp://{0}.{1}:{2}", baseAddress, ip, port))
+                      .ToList();
+        }
+
     }
 }

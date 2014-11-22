@@ -13,7 +13,8 @@ namespace dot5
         {
             using (NetMQContext ctx = NetMQContext.Create())
             {
-                using (var client = ctx.CreateRequestSocket())
+                Console.ReadLine();
+                using (var client = ctx.CreateDealerSocket())
                 {
                     client.Connect("tcp://127.0.0.1:5556");
 

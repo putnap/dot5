@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using NetMQ;
 
 namespace dot5_server
@@ -11,13 +12,25 @@ namespace dot5_server
             {
                 using (var server = ctx.CreateResponseSocket())
                 {
-                    server.Bind("tcp://127.0.0.1:5556");
+                    server.Bind("tcp://192.168.1.10:5556");
 
+                    int count = 0;
+
+                    var sw = Stopwatch.StartNew();
+                    
                     while (true)
                     {
                         var message = server.ReceiveString();
-                        Console.WriteLine("From Client: {0}", message);
+
+                        if (count%1000 == 0)
+                        {
+                            //Console.WriteLine("From Client ({0}): {1}", count, message);
+                            Console.WriteLine("Msgs/s: {0}", count / sw.Elapsed.TotalSeconds);
+                        }
+
                         server.Send("Hello,");
+
+                        count++;
                     }
                 }
             }

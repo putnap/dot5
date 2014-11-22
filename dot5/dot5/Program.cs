@@ -11,11 +11,18 @@ namespace dot5
     {
         static void Main(string[] args)
         {
+            var ipAddressAndPort = "127.0.0.1:5556";
+            if (args.Any())
+            {
+                ipAddressAndPort = args[0];
+            }
+
             using (NetMQContext ctx = NetMQContext.Create())
             {
                 using (var client = ctx.CreateRequestSocket())
                 {
-                    client.Connect("tcp://127.0.0.1:5556");
+                    Console.WriteLine("Connecting to " + ipAddressAndPort);
+                    client.Connect("tcp://" + ipAddressAndPort);
 
                     while (true)
                     {

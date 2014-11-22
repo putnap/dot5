@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using NetMQ;
 
 namespace dot5_server
@@ -8,20 +7,26 @@ namespace dot5_server
     {
         static void Main(string[] args)
         {
+            if (args.Length < 1)
+            {
+                Console.WriteLine("You must pass a secret as the first command line argument.");
+                Environment.Exit(1);
+            }
+
+            var secret = args[0];
+            var address = "127.0.0.1:5556";
+
+            if (args.Length > 1)
+            {
+                address = args[1];
+            }
+
             using (var ctx = NetMQContext.Create())
             {
                 using (var server = ctx.CreateDealerSocket())
                 {
-                    server.Bind("tcp://127.0.0.1:5556");
-                    server.Send("Hello,");
-                    //var message = server.ReceiveString();
-
-                    //if (count%1000 == 0)
-                    //{
-                    //    //Console.WriteLine("From Client ({0}): {1}", count, message);
-                    //    Console.WriteLine("Msgs/s: {0}", count / sw.Elapsed.TotalSeconds);
-                    //}
-
+                    server.Bind("tcp://" + address);
+                    server.Send(secret);
                 }
             }
         }

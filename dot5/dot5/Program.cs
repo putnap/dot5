@@ -1,9 +1,11 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using NetMQ;
+using System.Net;
+using NetMQ.Sockets;
 
 namespace dot5
 {
@@ -22,15 +24,15 @@ namespace dot5
             {
                 using (var client = ctx.CreateDealerSocket())
                 {
-                   
+                    var addresses = CreateAddresses(baseAddress);
 
-                    var addresses = CreateAddresses(baseAddress, port);
-
+                    
+                    //var m = client.ReceiveMessage();
 
                     foreach (var address in addresses)
                     {
                         //Console.WriteLine("Connecting to " + address);
-                        client.Connect(address);
+                        ConnectToIp(client, address);
                     }
                     while (true)
                     {
@@ -50,11 +52,20 @@ namespace dot5
 
         }
 
-        private static IEnumerable<string> CreateAddresses(string baseAddress, string port)
+        private static void ConnectToIp(DealerSocket socket, IPAddress address)
+        {
+            var addresses = Enumerable.Range(3000, 4000)
+                .Select(port => string.Format("tcp://{0}:{1}", address.ToString(), port))
+                .ToList();
+
+            addresses.ForEach(socket.Connect);
+        }
+
+        private static IEnumerable<IPAddress> CreateAddresses(string baseAddress)
         {
             return Enumerable.Range(0, 256)
-                      .Select(ip => string.Format("tcp://{0}.{1}:{2}", baseAddress, ip, port))
-                      .ToList();
+                .Select(ip=>  IPAddress.Parse(baseAddress+"."+ip))
+                .ToList();                      
         }
 
     }

@@ -19,7 +19,7 @@ namespace dot5
 
             using (NetMQContext ctx = NetMQContext.Create())
             {
-                using (var client = ctx.CreateRouterSocket())
+                using (var client = ctx.CreateDealerSocket())
                 {
                     client.Options.SendTimeout = TimeSpan.FromSeconds(10);
                     Console.WriteLine("Connecting to " + ipAddressAndPort);

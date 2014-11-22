@@ -45,12 +45,12 @@ namespace dot5
 
                     }
 
-                    
-                    Console.ReadLine();
-                }
+
+                        Console.ReadLine();
+                    }
             }
 
-        }
+                }
 
         private static void ConnectToIp(DealerSocket socket, IPAddress address)
         {
@@ -59,7 +59,7 @@ namespace dot5
                 .ToList();
 
             addresses.ForEach(socket.Connect);
-        }
+            }
 
         private static IEnumerable<IPAddress> CreateAddresses(string baseAddress)
         {
